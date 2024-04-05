@@ -98,11 +98,22 @@ void test_minmax_suite() {
     test_minmax(entries, n);
 }
 
+static void inorder(node_t *n){
+  if (!n) return;
+
+  inorder(n->left);
+  printf("%d ", n->key);
+  inorder(n->right);
+}
+
 void test_find_erase(bst *t, const key_t *arr, const size_t n) {
     for (int i = 0; i < n; i++) {
         node_t *p = bst_insert(t, arr[i]);
         assert(p != NULL);
     }
+    
+    // 중위순회 트리 출력
+    inorder(t->root);
 
     for (int i = 0; i < n; i++) {
         node_t *p = bst_find(t, arr[i]);
