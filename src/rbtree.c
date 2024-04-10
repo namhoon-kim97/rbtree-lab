@@ -9,8 +9,8 @@ static void insert_fixup(rbtree *t, node_t *z);
 static node_t *_min(const rbtree *t, node_t *nxt);
 static void erase_fixup(rbtree *t, node_t *x);
 static void rb_transplant(rbtree *t, node_t *x, node_t *y);
-static void inorder_traversal(rbtree *t, node_t *p, key_t *arr, const size_t n,
-                              int *idx);
+static void inorder_traversal(const rbtree *t, node_t *p, key_t *arr,
+                              const size_t n, int *idx);
 
 rbtree *new_rbtree(void) {
   rbtree *p = (rbtree *)calloc(1, sizeof(rbtree));
@@ -114,7 +114,7 @@ node_t *rbtree_insert(rbtree *t, const key_t key) {
   node_t *y = t->nil;
   node_t *z = (node_t *)malloc(sizeof(node_t));
   while (x != t->nil) {
-    y = x;
+    y = x; // z의 부모노드를 변수 y에 저장.
     if (key < x->key)
       x = x->left;
     else
@@ -131,9 +131,8 @@ node_t *rbtree_insert(rbtree *t, const key_t key) {
   z->left = t->nil;
   z->right = t->nil;
   z->color = RBTREE_RED;
-  node_t *ret = z;
   insert_fixup(t, z);
-  return ret;
+  return z;
 }
 
 node_t *rbtree_find(const rbtree *t, const key_t key) {
@@ -246,6 +245,7 @@ static void rb_transplant(rbtree *t, node_t *x, node_t *y) {
   y->parent = x->parent;
 }
 
+// 노드 nxt밑으로 가장 작은 값을 가진 노드 반환
 static node_t *_min(const rbtree *t, node_t *nxt) {
   while (nxt->left != t->nil) {
     nxt = nxt->left;
@@ -275,6 +275,7 @@ int rbtree_erase(rbtree *t, node_t *p) {
     } else {
       x->parent = y; // x가 nil노드일 경우 x->parent값이 없으므로 명시해줘야 함.
     }
+
     rb_transplant(t, p, y);
 
     y->left = p->left;
@@ -287,8 +288,8 @@ int rbtree_erase(rbtree *t, node_t *p) {
   return 0;
 }
 
-static void inorder_traversal(rbtree *t, node_t *p, key_t *arr, const size_t n,
-                              int *idx) {
+static void inorder_traversal(const rbtree *t, node_t *p, key_t *arr,
+                              const size_t n, int *idx) {
   if (p == t->nil) {
     return;
   }
