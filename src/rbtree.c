@@ -290,7 +290,7 @@ int rbtree_erase(rbtree *t, node_t *p) {
 
 static void inorder_traversal(const rbtree *t, node_t *p, key_t *arr,
                               const size_t n, int *idx) {
-  if (p == t->nil) {
+  if (p == t->nil || *idx > n) {
     return;
   }
   inorder_traversal(t, p->left, arr, n, idx);
