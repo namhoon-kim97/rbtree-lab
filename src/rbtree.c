@@ -14,7 +14,15 @@ static void inorder_traversal(const rbtree *t, node_t *p, key_t *arr,
 
 rbtree *new_rbtree(void) {
   rbtree *p = (rbtree *)calloc(1, sizeof(rbtree));
+  if (p == NULL) {
+    fprintf(stderr, "Memory allocation failed for rbtree pointer\n");
+    exit(EXIT_FAILURE);
+  }
   node_t *nil = (node_t *)calloc(1, sizeof(node_t));
+  if (nil == NULL) {
+    fprintf(stderr, "Memory allocation failed for nil pointer\n");
+    exit(EXIT_FAILURE);
+  }
   p->root = nil;
   p->nil = nil;
   nil->color = RBTREE_BLACK;
@@ -113,6 +121,10 @@ node_t *rbtree_insert(rbtree *t, const key_t key) {
   node_t *x = t->root;
   node_t *y = t->nil;
   node_t *z = (node_t *)malloc(sizeof(node_t));
+  if (z == NULL) {
+    fprintf(stderr, "Memory allocation failed for new_node pointer\n");
+    exit(EXIT_FAILURE);
+  }
   while (x != t->nil) {
     y = x; // z의 부모노드를 변수 y에 저장.
     if (key < x->key)
